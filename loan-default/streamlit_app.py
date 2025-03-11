@@ -45,10 +45,11 @@ loan_amount = loan_request_form.number_input('Loan Amount', min_value=100, max_v
 annual_income = loan_request_form.number_input('Annual Income', min_value=0, value=12000, step=100)
 employment_duration = loan_request_form.number_input('Number of years at current employment position', min_value=0, max_value=10, step=1)
 
-home_types = ['Rent', 'Own', 'Mortgage', 'Other', 'None']
+home_types = ['Rent', 'Own', 'Mortgage', 'None', 'Other']
 home_type = loan_request_form.radio(
     'Home Ownership',
-    home_types
+    home_types,
+    horizontal=True
 )
 
 loan_purposes = ['credit_card', 'debt_consolidation', 'educational', 'home_improvement', 'house', 'major_purchase', 'medical', 'moving', 'renewable_energy', 'small_business', 'vacation', 'wedding', 'other']
@@ -61,16 +62,18 @@ purpose = loan_request_form.pills(
 loan_duration = loan_request_form.radio(
     'Loan Duration',
     [36, 60],
-    format_func=lambda duration: f'{duration} months'
+    format_func=lambda duration: f'{duration} months',
+    horizontal=True
 )
 
 education_options = ['College degree', 'GED/High school', 'None']
 education = loan_request_form.radio(
     'Completed Education Level',
-    education_options
+    education_options,
+    horizontal=True
 )
 
-advanced_options_form = loan_request_form.expander('Expanded options')
+advanced_options_form = loan_request_form.expander('Advanced options')
 fico_range_low = advanced_options_form.number_input('FICO Lower Bound', min_value=100, max_value=1000, value=500, step=1)
 fico_range_high = advanced_options_form.number_input('FICO Upper Bound', min_value=100, max_value=1000, value=600, step=1)
 
