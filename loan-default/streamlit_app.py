@@ -44,13 +44,17 @@ loan_request_form = st.form('loan request')
 loan_amount = loan_request_form.number_input('Loan Amount', min_value=100, max_value=100_000, value=1000, step=100)
 annual_income = loan_request_form.number_input('Annual Income', min_value=0, value=12000, step=100)
 employment_duration = loan_request_form.number_input('Number of years at current employment position', min_value=0, max_value=10, step=1)
+
+home_types = ['Rent', 'Own', 'Mortgage', 'Other', 'None']
 home_type = loan_request_form.radio(
     'Home Ownership',
-    ['Rent', 'Own', 'Mortgage', 'Other', 'None']
+    home_types
 )
+
+loan_purposes = ['credit_card', 'debt_consolidation', 'educational', 'home_improvement', 'house', 'major_purchase', 'medical', 'moving', 'renewable_energy', 'small_business', 'vacation', 'wedding', 'other']
 purpose = loan_request_form.pills(
     'Purpose',
-    ['credit_card', 'debt_consolidation', 'educational', 'home_improvement', 'house', 'major_purchase', 'medical', 'moving', 'renewable_energy', 'small_business', 'vacation', 'wedding', 'other'],
+    loan_purposes,
     format_func=lambda option: ' '.join([word.capitalize() for word in option.split('_')])
 )
 
@@ -72,6 +76,12 @@ if loan_request_form.form_submit_button('Request loan'):
         f'home_ownership_{home_type.upper()}': 1,
         f'purpose_{purpose}': 1
     }
+
+    for loan_purpose in loan_purposes:
+        datapoint[f'purpose_' + loan_purpose] = 1 if loan_purpose == purpose else 0
+
+    for home in home_types:
+        datapoint[f'home_ownership_{home.upper()}'] = 1 if home == home_type else 0
     
     probability_granted = request_loan(datapoint)
     confidence = 0
