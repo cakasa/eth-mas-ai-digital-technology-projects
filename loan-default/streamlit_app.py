@@ -65,7 +65,7 @@ loan_duration = loan_request_form.radio(
 )
 
 education_options = ['College degree', 'GED/High school', 'None']
-education = loan_request.form.radio(
+education = loan_request_form.radio(
     'Completed Education Level',
     education_options
 )
