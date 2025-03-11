@@ -36,7 +36,6 @@ def request_loan(datapoint):
     df = impute(df)
     df = scale(df)
     prob_of_grant = model.predict_proba(df)[0][1]
-    st.write(prob_of_grant)
     
     return prob_of_grant
     
@@ -48,6 +47,11 @@ employment_duration = loan_request_form.number_input('Number of years at current
 home_type = loan_request_form.radio(
     'Home Ownership',
     ['Rent', 'Own', 'Mortgage', 'Other', 'None']
+)
+purpose = loan_request_form.pills(
+    'Purpose',
+    ['credit_card', 'debt_consolidation', 'educational', 'home_improvement', 'house', 'major_purchase', 'medical', 'moving', 'renewable_energy', 'small_business', 'vacation', 'wedding', 'other'],
+    format_func=lambda option: ' '.join([word.capitalize() for word in option.split('_')])
 )
 
 loan_duration = loan_request_form.radio(
@@ -65,11 +69,8 @@ if loan_request_form.form_submit_button('Request loan'):
         'emp_length': employment_duration,
         'loan_amnt': loan_amount,
         'installment': round(loan_amount / loan_duration, 2),
-        'home_ownership_MORTGAGE': home_type == 'Mortgage',
-        'home_ownership_NONE': home_type == 'None',
-        'home_ownership_OWN': home_type == 'Own',
-        'home_ownership_RENT': home_type == 'Rent',
-        'home_ownership_OTHER': home_type == 'Other'
+        f'home_ownership_{home_type.upper()}': 1,
+        f'purpose_{purpose}': 1
     }
     
     probability_granted = request_loan(datapoint)
