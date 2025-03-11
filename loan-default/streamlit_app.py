@@ -69,6 +69,11 @@ education = loan_request_form.radio(
     'Completed Education Level',
     education_options
 )
+
+advanced_options_form = loan_request_form.expander('Expanded options')
+fico_range_low = advanced_options_form.number_input('FICO Lower Bound', min_value=100, max_value=1000, value=500, step=1)
+fico_range_high = advanced_options_form.number_input('FICO Upper Bound', min_value=100, max_value=1000, value=600, step=1)
+
 installment = round(loan_amount / loan_duration, 2)
 st.write(f'Per month: {installment}')
 
@@ -78,8 +83,8 @@ if loan_request_form.form_submit_button('Request loan'):
         'emp_length': employment_duration,
         'loan_amnt': loan_amount,
         'installment': round(loan_amount / loan_duration, 2),
-        f'home_ownership_{home_type.upper()}': 1,
-        f'purpose_{purpose}': 1
+        'fico_range_low': fico_range_low,
+        'fico_range_high': fico_range_high,
     }
 
     for loan_purpose in loan_purposes:
@@ -95,10 +100,10 @@ if loan_request_form.form_submit_button('Request loan'):
     confidence = 0
     
     if probability_granted >= 0.5:
-        st.markdown(':green[Loan granted]')
+        st.markdown(':green[Loan request should be accepted]')
         confidence = probability_granted
     else:
-        st.markdown(':red[Loan rejected]')
+        st.markdown(':red[Loan request should be rejected]')
         confidence = 1 - probability_granted
 
     st.markdown(f'Confidence: {round(confidence * 100)}%')
