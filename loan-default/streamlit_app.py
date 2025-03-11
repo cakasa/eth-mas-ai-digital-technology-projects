@@ -15,7 +15,7 @@ loan_request_form = st.form('loan request')
 loan_amount = loan_request_form.number_input('Loan Amount', min_value=100, max_value=100_000, value=1000, step=100)
 annual_income = loan_request_form.number_input('Annual Income', min_value=0, value=12000, step=100)
 
-duration = lst.radio(
+duration = loan_request_form.radio(
     'Loan Duration',
     [36, 60],
     format_func=lambda duration: f'{duration} months'
