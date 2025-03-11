@@ -64,6 +64,11 @@ loan_duration = loan_request_form.radio(
     format_func=lambda duration: f'{duration} months'
 )
 
+education_options = ['College degree', 'GED/High school', 'None']
+education = loan_request.form.radio(
+    'Completed Education Level',
+    education_options
+)
 installment = round(loan_amount / loan_duration, 2)
 st.write(f'Per month: {installment}')
 
@@ -78,10 +83,13 @@ if loan_request_form.form_submit_button('Request loan'):
     }
 
     for loan_purpose in loan_purposes:
-        datapoint[f'purpose_' + loan_purpose] = 1 if loan_purpose == purpose else 0
+        datapoint[f'purpose_{loan_purpose}'] = 1 if loan_purpose == purpose else 0
 
     for home in home_types:
         datapoint[f'home_ownership_{home.upper()}'] = 1 if home == home_type else 0
+
+    for education_level in education_options:
+        datapoint[f'education_{education_level}'] = 1 if education == education_level else 0
     
     probability_granted = request_loan(datapoint)
     confidence = 0
